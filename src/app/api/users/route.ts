@@ -5,6 +5,8 @@ import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import { UserFilters } from "@/interfaces/user/types";
 
+export const dynamic = "force-dynamic";
+
 // GET /api/users
 export async function GET(request: Request) {
   try {

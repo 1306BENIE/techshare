@@ -20,11 +20,17 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 
-export function ToolForm() {
+// Ajout des props pour édition
+interface ToolFormProps {
+  initialData?: Partial<CreateToolInput>;
+  onSubmit?: (data: CreateToolInput) => Promise<void>;
+}
+
+export function ToolForm({ initialData, onSubmit }: ToolFormProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>(initialData?.images || []);
 
   const {
     register,
@@ -34,7 +40,7 @@ export function ToolForm() {
     formState: { errors },
   } = useForm<CreateToolInput>({
     resolver: zodResolver(createToolSchema),
-    defaultValues: {
+    defaultValues: initialData || {
       name: "",
       description: "",
       price: 0,
@@ -80,7 +86,13 @@ export function ToolForm() {
     setImages((prev) => prev.filter((current) => current !== url));
   };
 
-  const onSubmit = async (data: CreateToolInput) => {
+  // Soumission personnalisée si onSubmit est fourni (édition), sinon création
+  const handleFormSubmit = async (data: CreateToolInput) => {
+    if (onSubmit) {
+      await onSubmit({ ...data, images });
+      return;
+    }
+
     if (!session) {
       toast.error("Vous devez être connecté pour créer un outil");
       router.push("/auth/signin");
@@ -118,7 +130,7 @@ export function ToolForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
       <div className="space-y-4">
         <div>
           <label

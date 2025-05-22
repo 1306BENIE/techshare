@@ -10,7 +10,11 @@ export const useTools = () => {
   useEffect(() => {
     const fetchTools = async () => {
       try {
-        const response = await new ToolApiService().getTools();
+        console.log("Fetching tools...");
+        const toolService = new ToolApiService();
+        const response = await toolService.getTools();
+        console.log("Tools response:", response);
+
         // On gère tous les cas possibles
         let toolsArray: Tool[] = [];
         if (response.data && Array.isArray((response.data as any).tools)) {
@@ -20,12 +24,15 @@ export const useTools = () => {
         } else if (Array.isArray((response as any).tools)) {
           toolsArray = (response as any).tools;
         }
+
+        console.log("Processed tools array:", toolsArray);
         setTools(toolsArray);
-      } catch (err) {
+      } catch (err: any) {
+        console.error("Error fetching tools:", err);
         setError(
-          err instanceof Error
-            ? err.message
-            : "Une erreur inattendue est survenue"
+          err?.response?.data?.message ||
+            err?.message ||
+            "Une erreur inattendue est survenue lors du chargement des outils"
         );
       } finally {
         setLoading(false);

@@ -54,7 +54,7 @@ async function getReceivedBookings() {
             name: booking.userId.name || "",
             email: booking.userId.email || "",
           }
-        : null,
+        : undefined,
     startDate: booking.startDate?.toISOString() || "",
     endDate: booking.endDate?.toISOString() || "",
     totalPrice: booking.totalPrice,

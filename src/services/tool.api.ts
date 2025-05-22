@@ -1,9 +1,24 @@
 import { Tool, ToolFilters } from "@/interfaces/tool/types";
 import { PaginationParams } from "@/interfaces/common/pagination.types";
 import { ApiResponse } from "@/interfaces/common/api.types";
-import axiosInstance from "@/config/axios";
+import axios from "axios";
 
 export class ToolApiService {
+  private getBaseUrl() {
+    // En production, utiliser l'URL absolue
+    if (process.env.NEXT_PUBLIC_API_URL) {
+      return process.env.NEXT_PUBLIC_API_URL;
+    }
+
+    // En développement local
+    if (process.env.NODE_ENV === "development") {
+      return "http://localhost:3000";
+    }
+
+    // En production sans URL définie, utiliser l'URL relative
+    return "";
+  }
+
   async getTools(
     filters: ToolFilters = {},
     pagination: PaginationParams = { page: 1, limit: 10 }
@@ -29,8 +44,9 @@ export class ToolApiService {
       if (pagination.sortOrder)
         queryParams.append("sortOrder", pagination.sortOrder);
 
-      const response = await axiosInstance.get(
-        `/api/tools?${queryParams.toString()}`
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.get(
+        `${baseUrl}/api/tools?${queryParams.toString()}`
       );
       return response.data as ApiResponse<Tool[]>;
     } catch (error: any) {
@@ -40,7 +56,8 @@ export class ToolApiService {
 
   async getToolById(id: string): Promise<ApiResponse<Tool>> {
     try {
-      const response = await axiosInstance.get(`/tools/${id}`);
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.get(`${baseUrl}/api/tools/${id}`);
       return response.data as ApiResponse<Tool>;
     } catch (error: any) {
       throw new Error(error.message);
@@ -49,7 +66,8 @@ export class ToolApiService {
 
   async createTool(toolData: Partial<Tool>): Promise<ApiResponse<Tool>> {
     try {
-      const response = await axiosInstance.post("/tools", toolData);
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.post(`${baseUrl}/api/tools`, toolData);
       return response.data as ApiResponse<Tool>;
     } catch (error: any) {
       throw new Error(error.message);
@@ -61,7 +79,8 @@ export class ToolApiService {
     toolData: Partial<Tool>
   ): Promise<ApiResponse<Tool>> {
     try {
-      const response = await axiosInstance.put(`/tools/${id}`, toolData);
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.put(`${baseUrl}/api/tools/${id}`, toolData);
       return response.data as ApiResponse<Tool>;
     } catch (error: any) {
       throw new Error(error.message);
@@ -70,7 +89,8 @@ export class ToolApiService {
 
   async deleteTool(id: string): Promise<ApiResponse<void>> {
     try {
-      const response = await axiosInstance.delete(`/tools/${id}`);
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.delete(`${baseUrl}/api/tools/${id}`);
       return response.data as ApiResponse<void>;
     } catch (error: any) {
       throw new Error(error.message);
@@ -79,7 +99,8 @@ export class ToolApiService {
 
   async getToolsByOwner(ownerId: string): Promise<ApiResponse<Tool[]>> {
     try {
-      const response = await axiosInstance.get(`/tools/owner/${ownerId}`);
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.get(`${baseUrl}/api/tools/owner/${ownerId}`);
       return response.data as ApiResponse<Tool[]>;
     } catch (error: any) {
       throw new Error(error.message);
@@ -91,7 +112,8 @@ export class ToolApiService {
     status: "AVAILABLE" | "RENTED" | "MAINTENANCE"
   ): Promise<ApiResponse<Tool>> {
     try {
-      const response = await axiosInstance.patch(`/tools/${id}/status`, {
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.patch(`${baseUrl}/api/tools/${id}/status`, {
         status,
       });
       return response.data as ApiResponse<Tool>;
@@ -106,10 +128,14 @@ export class ToolApiService {
     endDate: string
   ): Promise<ApiResponse<{ isAvailable: boolean }>> {
     try {
-      const response = await axiosInstance.post(`/tools/${id}/availability`, {
-        startDate,
-        endDate,
-      });
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.post(
+        `${baseUrl}/api/tools/${id}/availability`,
+        {
+          startDate,
+          endDate,
+        }
+      );
       return response.data as ApiResponse<{ isAvailable: boolean }>;
     } catch (error: any) {
       throw new Error(error.message);

@@ -109,20 +109,25 @@ export class ToolService {
 
   private mapToTool(mongooseTool: any): Tool {
     return {
-      id: mongooseTool._id.toString(),
+      _id: mongooseTool._id.toString(),
       name: mongooseTool.name,
       description: mongooseTool.description,
+      category: mongooseTool.category,
       price: mongooseTool.price,
-      images: mongooseTool.images,
-      location: mongooseTool.location,
+      pricePerDay: mongooseTool.pricePerDay,
+      deposit: mongooseTool.deposit,
       status: mongooseTool.status,
       ownerId: mongooseTool.ownerId,
-      category: mongooseTool.category,
-      specifications: Object.fromEntries(
-        mongooseTool.specifications || new Map()
-      ),
+      owner: mongooseTool.owner,
+      images: mongooseTool.images,
+      location: mongooseTool.location,
+      specifications: {
+        ...Object.fromEntries(mongooseTool.specifications || new Map()),
+        condition: mongooseTool.specifications?.condition || "GOOD",
+      },
       createdAt: mongooseTool.createdAt,
       updatedAt: mongooseTool.updatedAt,
+      __v: mongooseTool.__v,
     };
   }
 }

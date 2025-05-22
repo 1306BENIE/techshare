@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { ToolCard } from "./ToolCard";
 import { useTools } from "@/hooks/useTools";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
 
 export const ToolsSection = () => {
   const { tools, loading, error } = useTools();
@@ -26,7 +28,22 @@ export const ToolsSection = () => {
           </div>
         ) : error ? (
           <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-            {error}
+            <p className="mb-2">{error}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-2"
+              onClick={() => window.location.reload()}
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Réessayer
+            </Button>
+          </div>
+        ) : tools.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500">
+              Aucun outil disponible pour le moment.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

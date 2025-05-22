@@ -5,6 +5,8 @@ import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
+export const dynamic = "force-dynamic";
+
 // TODO: Déplacer ces informations dans un fichier de configuration sécurisé
 const ADMIN_EMAIL = "admin@techshare.com";
 const ADMIN_PASSWORD = "admin123";

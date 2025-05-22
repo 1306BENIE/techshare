@@ -1,2 +1,2 @@
 export * from "./types";
-export * from "./filters";
+export type { ReviewFilters as ReviewFilterOptions } from "./filters";

@@ -5,6 +5,8 @@ import connectDB from "@/lib/mongodb";
 import Booking from "@/models/Booking";
 import Tool from "@/models/Tool";
 
+export const dynamic = "force-dynamic";
+
 // GET /api/bookings/received
 export async function GET(req: NextRequest) {
   try {

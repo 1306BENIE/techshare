@@ -4,6 +4,21 @@ import { ApiResponse } from "@/interfaces/common/api.types";
 import axios from "axios";
 
 export class ReviewApiService {
+  private getBaseUrl() {
+    // En production, utiliser l'URL absolue
+    if (process.env.NEXT_PUBLIC_API_URL) {
+      return process.env.NEXT_PUBLIC_API_URL;
+    }
+
+    // En développement local
+    if (process.env.NODE_ENV === "development") {
+      return "http://localhost:3000";
+    }
+
+    // En production sans URL définie, utiliser l'URL relative
+    return "";
+  }
+
   async getReviews(
     filters: ReviewFilters = {},
     pagination: PaginationParams = { page: 1, limit: 10 }
@@ -30,18 +45,21 @@ export class ReviewApiService {
       if (pagination.sortOrder)
         queryParams.append("sortOrder", pagination.sortOrder);
 
-      const response = await axios.get(
-        `/api/reviews?${queryParams.toString()}`
-      );
+      const baseUrl = this.getBaseUrl();
+      const url = `${baseUrl}/api/reviews?${queryParams.toString()}`;
+
+      const response = await axios.get(url);
       return response.data as ApiResponse<Review[]>;
     } catch (error: any) {
-      throw new Error(error.message);
+      console.error("Error fetching reviews:", error);
+      throw new Error(error.message || "Failed to fetch reviews");
     }
   }
 
   async getReviewById(id: string): Promise<ApiResponse<Review>> {
     try {
-      const response = await axios.get(`/api/reviews/${id}`);
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.get(`${baseUrl}/api/reviews/${id}`);
       return response.data as ApiResponse<Review>;
     } catch (error: any) {
       throw new Error(error.message);
@@ -85,7 +103,8 @@ export class ReviewApiService {
 
   async getReviewsByUser(userId: string): Promise<ApiResponse<Review[]>> {
     try {
-      const response = await axios.get(`/api/reviews/user/${userId}`);
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.get(`${baseUrl}/api/reviews/user/${userId}`);
       return response.data as ApiResponse<Review[]>;
     } catch (error: any) {
       throw new Error(error.message);
@@ -94,7 +113,8 @@ export class ReviewApiService {
 
   async getReviewsByTool(toolId: string): Promise<ApiResponse<Review[]>> {
     try {
-      const response = await axios.get(`/api/reviews/tool/${toolId}`);
+      const baseUrl = this.getBaseUrl();
+      const response = await axios.get(`${baseUrl}/api/reviews/tool/${toolId}`);
       return response.data as ApiResponse<Review[]>;
     } catch (error: any) {
       throw new Error(error.message);

@@ -1,5 +1,5 @@
 import { UserController } from "@/controllers/user.controller";
-import { UserProfile } from "@/components/users/UserProfile";
+import { UserProfileDetails } from "@/components/users/UserProfileDetails";
 
 export default async function UserPage({ params }: { params: { id: string } }) {
   const userController = new UserController();
@@ -7,7 +7,7 @@ export default async function UserPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <UserProfile user={user} />
+      <UserProfileDetails profile={user} />
     </div>
   );
 }

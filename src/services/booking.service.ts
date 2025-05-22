@@ -203,7 +203,7 @@ export class BookingService {
     booking: HydratedDocument<Booking>
   ): BookingResponse {
     return {
-      id: booking._id.toString(),
+      id: (booking._id as any).toString(),
       toolId: booking.toolId.toString(),
       userId: booking.userId.toString(),
       startDate: booking.startDate,

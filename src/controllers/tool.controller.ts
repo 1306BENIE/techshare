@@ -88,7 +88,12 @@ export class ToolController {
       const searchParams = request.nextUrl.searchParams;
       const filters: ToolFilters = {
         category: searchParams.get("category") || undefined,
-        status: searchParams.get("status") || undefined,
+        status:
+          (searchParams.get("status") as
+            | "AVAILABLE"
+            | "RENTED"
+            | "MAINTENANCE"
+            | undefined) || undefined,
         minPrice: searchParams.get("minPrice")
           ? Number(searchParams.get("minPrice"))
           : undefined,

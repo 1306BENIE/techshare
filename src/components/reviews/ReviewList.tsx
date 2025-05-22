@@ -2,8 +2,22 @@ import React from "react";
 import { Review } from "@/interfaces/review";
 import Link from "next/link";
 
+// Étendre le type Review pour inclure _id et tool
+interface ExtendedReview extends Review {
+  _id: string;
+  tool?: {
+    name: string;
+    images: string[];
+    category: string;
+    location: {
+      city: string;
+      country: string;
+    };
+  };
+}
+
 interface ReviewListProps {
-  reviews: Review[];
+  reviews: ExtendedReview[];
 }
 
 export function ReviewList({ reviews }: ReviewListProps) {
@@ -14,17 +28,15 @@ export function ReviewList({ reviews }: ReviewListProps) {
           <div className="flex justify-between items-start">
             <div className="flex space-x-4">
               <img
-                src={review.tool.images[0]}
-                alt={review.tool.name}
-                className="w-24 h-24 object-cover rounded-lg"
+                src={review.tool?.images[0]}
+                alt={review.tool?.name}
+                className="w-32 h-32 object-cover rounded-lg"
               />
               <div>
-                <h3 className="text-lg font-semibold">{review.tool.name}</h3>
+                <h3 className="font-medium">{review.tool?.name}</h3>
+                <p className="text-gray-600">{review.tool?.category}</p>
                 <p className="text-gray-600">
-                  Par {review.user.firstName} {review.user.lastName}
-                </p>
-                <p className="text-gray-600">
-                  Le {new Date(review.createdAt).toLocaleDateString()}
+                  {review.tool?.location.city}, {review.tool?.location.country}
                 </p>
               </div>
             </div>
@@ -33,7 +45,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
                 {[...Array(5)].map((_, index) => (
                   <svg
                     key={index}
-                    className={`w-5 h-5 ${
+                    className={`w-6 h-6 ${
                       index < review.rating
                         ? "text-yellow-400"
                         : "text-gray-300"

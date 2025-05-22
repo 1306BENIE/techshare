@@ -1,13 +1,18 @@
-import { ReviewController } from "@/controllers/review.controller";
+import { ReviewApiService } from "@/services/review.api";
 import { ReviewDetails } from "@/components/reviews/ReviewDetails";
+import { notFound } from "next/navigation";
 
 export default async function ReviewPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const reviewController = new ReviewController();
-  const { data: review } = await reviewController.getReviewById(params.id);
+  const reviewApiService = new ReviewApiService();
+  const { data: review } = await reviewApiService.getReviewById(params.id);
+
+  if (!review) {
+    notFound();
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">

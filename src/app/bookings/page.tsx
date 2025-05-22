@@ -23,21 +23,21 @@ async function getBookings() {
     .lean();
 
   // Sérialiser les données pour éviter les références circulaires
-  const serializedBookings = bookings.map((booking) => ({
-    id: booking._id.toString(),
-    toolId: booking.toolId._id.toString(),
-    userId: booking.userId.toString(),
-    startDate: booking.startDate.toISOString(),
-    endDate: booking.endDate.toISOString(),
+  const serializedBookings = bookings.map((booking: any) => ({
+    id: booking._id?.toString?.() ?? "",
+    toolId: booking.toolId?._id?.toString?.() ?? "",
+    userId: booking.userId?.toString?.() ?? "",
+    startDate: booking.startDate?.toISOString?.() ?? "",
+    endDate: booking.endDate?.toISOString?.() ?? "",
     totalPrice: booking.totalPrice,
     deposit: booking.deposit,
     status: booking.status,
     paymentStatus: booking.paymentStatus,
     tool: {
-      name: booking.toolId.name,
-      images: booking.toolId.images,
-      price: booking.toolId.price,
-      deposit: booking.toolId.deposit,
+      name: booking.toolId?.name ?? "",
+      images: booking.toolId?.images ?? [],
+      price: booking.toolId?.price ?? 0,
+      deposit: booking.toolId?.deposit ?? 0,
     },
   }));
 

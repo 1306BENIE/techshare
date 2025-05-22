@@ -49,6 +49,7 @@ export interface User {
   };
   createdAt: string;
   updatedAt: string;
+  avatar?: string;
 }
 
 export interface UserFilters {

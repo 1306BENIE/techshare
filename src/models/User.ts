@@ -118,3 +118,4 @@ const User =
   mongoose.model<IUser, IUserModel>("User", userSchema);
 
 export default User;
+export type { IUser, IUserModel, IUserMethods } from "@/interfaces/user/types";

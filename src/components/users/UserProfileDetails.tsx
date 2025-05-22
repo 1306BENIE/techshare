@@ -90,7 +90,7 @@ export function UserProfileDetails({ profile }: UserProfileDetailsProps) {
 
           <div className="mt-8 flex justify-end space-x-4">
             <Link
-              href={`/users/${profile._id}/edit`}
+              href={`/users/${profile.id}/edit`}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
             >
               Modifier le profil

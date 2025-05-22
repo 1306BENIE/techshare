@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -15,7 +15,7 @@ import {
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 
-export default function SignInPage() {
+function SignInForm() {
   const [formData, setFormData] = useState<SignInInput>({
     email: "",
     password: "",
@@ -268,5 +268,13 @@ export default function SignInPage() {
         </div>
       </AnimatedContainer>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <SignInForm />
+    </Suspense>
   );
 }

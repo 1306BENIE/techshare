@@ -5,6 +5,21 @@ import axios from "axios";
 import { ENDPOINTS } from "@/constants/endpoints";
 
 export class UserApiService {
+  private getBaseUrl() {
+    // En production, utiliser l'URL absolue
+    if (process.env.NEXT_PUBLIC_API_URL) {
+      return process.env.NEXT_PUBLIC_API_URL;
+    }
+
+    // En développement local
+    if (process.env.NODE_ENV === "development") {
+      return "http://localhost:3000";
+    }
+
+    // En production sans URL définie, utiliser l'URL relative
+    return "";
+  }
+
   async getUsers(
     filters: UserFilters = {},
     pagination: PaginationParams = { page: 1, limit: 10 }
@@ -13,12 +28,10 @@ export class UserApiService {
       const queryParams = new URLSearchParams();
 
       // Ajouter les filtres
-      if (filters.search) queryParams.append("search", filters.search);
       if (filters.role) queryParams.append("role", filters.role);
       if (filters.isVerified !== undefined)
         queryParams.append("isVerified", filters.isVerified.toString());
-      if (filters.city) queryParams.append("city", filters.city);
-      if (filters.country) queryParams.append("country", filters.country);
+      if (filters.search) queryParams.append("search", filters.search);
 
       // Ajouter la pagination avec des valeurs par défaut
       queryParams.append("page", (pagination.page || 1).toString());
@@ -27,10 +40,14 @@ export class UserApiService {
       if (pagination.sortOrder)
         queryParams.append("sortOrder", pagination.sortOrder);
 
-      const response = await axios.get(`/api/users?${queryParams.toString()}`);
+      const baseUrl = this.getBaseUrl();
+      const url = `${baseUrl}/api/users?${queryParams.toString()}`;
+
+      const response = await axios.get(url);
       return response.data as ApiResponse<User[]>;
     } catch (error: any) {
-      throw new Error(error.message);
+      console.error("Error fetching users:", error);
+      throw new Error(error.message || "Failed to fetch users");
     }
   }
 
