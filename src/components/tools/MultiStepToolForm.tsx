@@ -49,7 +49,6 @@ export function MultiStepToolForm() {
             transition={{ duration: 0.4 }}
             className="flex flex-col items-center justify-center py-12"
           >
-            <span className="text-5xl mb-4">🎉</span>
             <h2 className="text-2xl font-bold text-blue-700 mb-2">
               Outil ajouté avec succès !
             </h2>

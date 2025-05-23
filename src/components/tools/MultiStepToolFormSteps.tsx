@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/select";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { createToolSchema, type CreateToolInput } from "@/lib/validations/tool";
-import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -331,7 +330,9 @@ export function useMultiStepToolForm() {
       | { target: { name: string; value: any } }
   ) => {
     const { name, value } = e.target;
-    if (name.includes(".")) {
+    if (name === "price" || name === "deposit") {
+      setFormData((prev) => ({ ...prev, [name]: Number(value) }));
+    } else if (name.includes(".")) {
       const [parent, child] = name.split(".");
       setFormData((prev) => {
         if (parent === "location" && typeof prev.location === "object") {
@@ -355,6 +356,7 @@ export function useMultiStepToolForm() {
             },
           };
         }
+
         // fallback (ne devrait pas arriver)
         return prev;
       });
