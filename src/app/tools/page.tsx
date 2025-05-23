@@ -4,75 +4,25 @@ import { ToolFilters } from "@/components/tools/ToolFilters";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
-import axios from "axios";
-
-async function getTools(searchParams: URLSearchParams) {
-  try {
-    const queryParams = new URLSearchParams(searchParams);
-    const apiUrl = `${
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
-    }/api/tools?${queryParams.toString()}`;
-    console.log("Fetching tools from:", apiUrl);
-
-    const { data } = await axios.get(apiUrl, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    console.log("Tools data received:", data);
-
-    if (!data || !Array.isArray(data.tools)) {
-      console.error("Invalid data structure received:", data);
-      throw new Error("Invalid data structure received from API");
-    }
-
-    return {
-      tools: data.tools || [],
-      pagination: data.pagination || {
-        total: 0,
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-      },
-    };
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("API Error:", {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        message: error.message,
-      });
-    } else {
-      console.error("Error fetching tools:", error);
-    }
-
-    return {
-      tools: [],
-      pagination: {
-        total: 0,
-        page: 1,
-        limit: 10,
-        totalPages: 1,
-      },
-    };
-  }
-}
+import { getToolsServer } from "@/lib/getToolsServer";
 
 export default async function ToolsPage({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const params = new URLSearchParams();
-  Object.entries(searchParams).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      params.append(key, String(value));
-    }
-  });
+  const page = Number(searchParams.page) || 1;
+  const limit = Number(searchParams.limit) || 10;
 
-  const { tools, pagination } = await getTools(params);
+  const { tools, pagination } = await getToolsServer({
+    search: searchParams.search as string,
+    category: searchParams.category as string,
+    condition: searchParams.condition as string,
+    minPrice: searchParams.minPrice as string,
+    maxPrice: searchParams.maxPrice as string,
+    page,
+    limit,
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">

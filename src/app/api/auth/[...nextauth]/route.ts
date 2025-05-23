@@ -76,6 +76,7 @@ const handler = NextAuth({
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 jours
   },
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/signin",
   },
@@ -97,5 +98,8 @@ const handler = NextAuth({
   },
   debug: true, // Activer le mode debug
 });
+
+// Ajout de trustHost pour App Router (Vercel)
+(handler as any).trustHost = true;
 
 export { handler as GET, handler as POST };
