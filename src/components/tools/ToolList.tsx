@@ -14,7 +14,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ToolListProps {
   tools: Tool[];
@@ -75,16 +75,23 @@ export function ToolList({
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tools.map((tool, index) => (
-          <motion.div
-            key={tool._id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-          >
-            <ToolCard tool={tool} />
-          </motion.div>
-        ))}
+        <AnimatePresence>
+          {tools.map((tool, index) => (
+            <motion.div
+              key={tool._id}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              transition={{ duration: 0.4, delay: index * 0.08 }}
+              whileHover={{
+                scale: 1.03,
+                boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+              }}
+            >
+              <ToolCard tool={tool} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
       {totalPages > 1 && (

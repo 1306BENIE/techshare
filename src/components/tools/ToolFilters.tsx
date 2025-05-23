@@ -67,20 +67,24 @@ export function ToolFilters({ initialFilters }: ToolFiltersProps) {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white p-6 rounded-lg shadow-sm border"
+      transition={{ duration: 0.5 }}
+      className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-lg transition-shadow duration-300"
     >
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Recherche
           </label>
-          <Input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher un outil..."
-            className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
-          />
+          <div className="relative">
+            <Input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Rechercher un outil..."
+              className="transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pl-10"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -92,16 +96,12 @@ export function ToolFilters({ initialFilters }: ToolFiltersProps) {
               <SelectTrigger className="transition-all duration-200 hover:border-blue-500 focus:ring-2 focus:ring-blue-500">
                 <SelectValue placeholder="Toutes les catégories" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border border-gray-200 shadow-lg">
                 <SelectItem value="ALL">Toutes les catégories</SelectItem>
-                <SelectItem value="LAPTOP">Laptop</SelectItem>
-                <SelectItem value="DESKTOP">Desktop</SelectItem>
-                <SelectItem value="TABLET">Tablet</SelectItem>
-                <SelectItem value="SMARTPHONE">Smartphone</SelectItem>
+                <SelectItem value="LAPTOP">Ordinateur portable</SelectItem>
+                <SelectItem value="DESKTOP">Ordinateur Bureau</SelectItem>
                 <SelectItem value="CAMERA">Camera</SelectItem>
-                <SelectItem value="PRINTER">Printer</SelectItem>
-                <SelectItem value="NETWORK">Network</SelectItem>
-                <SelectItem value="OTHER">Other</SelectItem>
+                <SelectItem value="Imprimante">Imprimante</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -114,19 +114,18 @@ export function ToolFilters({ initialFilters }: ToolFiltersProps) {
               <SelectTrigger className="transition-all duration-200 hover:border-blue-500 focus:ring-2 focus:ring-blue-500">
                 <SelectValue placeholder="Tous les états" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border border-gray-200 shadow-lg">
                 <SelectItem value="ALL">Tous les états</SelectItem>
                 <SelectItem value="NEW">Neuf</SelectItem>
                 <SelectItem value="LIKE_NEW">Comme neuf</SelectItem>
                 <SelectItem value="GOOD">Bon</SelectItem>
                 <SelectItem value="FAIR">Moyen</SelectItem>
-                <SelectItem value="POOR">Mauvais</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Prix min (FCFA)
@@ -160,18 +159,18 @@ export function ToolFilters({ initialFilters }: ToolFiltersProps) {
         </div>
       </div>
 
-      <div className="flex gap-4 pt-4 border-t">
+      <div className="flex gap-4 pt-4 border-t mt-6">
         <Button
           variant="outline"
           onClick={handleReset}
-          className="flex-1 gap-2 transition-all duration-200 hover:bg-gray-100"
+          className="flex-1 gap-2 transition-all duration-200 hover:bg-gray-100 hover:scale-105"
         >
           <X className="h-4 w-4" />
           Réinitialiser
         </Button>
         <Button
           onClick={handleFilter}
-          className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 transition-all duration-200"
+          className="flex-1 text-[#fff] gap-2 bg-blue-700 hover:bg-blue-700 transition-all duration-200 hover:scale-105"
         >
           <Filter className="h-4 w-4" />
           Filtrer

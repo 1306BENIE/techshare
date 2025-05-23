@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import { getToolsServer } from "@/lib/getToolsServer";
+import { ToolsHeroSection } from "@/components/tools/ToolsHeroSection";
 
 export default async function ToolsPage({
   searchParams,
@@ -25,49 +26,12 @@ export default async function ToolsPage({
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      <ToolsHeroSection />
+
+      <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Lien Accueil */}
-          <div className="mb-6">
-            <Link
-              href="/"
-              className="inline-block px-4 py-2 rounded-md bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100 hover:text-blue-900 transition"
-            >
-              Accueil
-            </Link>
-          </div>
-          {/* En-tête */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Outils disponibles
-              </h1>
-              <p className="text-gray-500">
-                Découvrez notre sélection d'outils de qualité
-              </p>
-            </div>
-            <Link href="/tools/create">
-              <Button className="bg-blue-600 hover:bg-blue-700 transition-colors">
-                <Plus className="w-4 h-4 mr-2" />
-                Ajouter un outil
-              </Button>
-            </Link>
-          </div>
-
-          {/* Barre de recherche mobile */}
-          <div className="md:hidden mb-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Rechercher un outil..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          {/* Contenu principal */}
+          {/* Filtres et contenu principal */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Filtres */}
             <div className="lg:col-span-1">

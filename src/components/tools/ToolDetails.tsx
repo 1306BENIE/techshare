@@ -80,7 +80,7 @@ export function ToolDetails({ tool }: ToolDetailsProps) {
             <div className="pt-4">
               <Link
                 href={`/tools/${tool._id}/book`}
-                className="block w-full bg-blue-600 text-white text-center py-3 rounded-md hover:bg-blue-700 transition-colors"
+                className="block w-full bg-blue-700 text-white text-center py-3 rounded-md hover:bg-blue-700 transition-colors"
               >
                 Réserver cet outil
               </Link>

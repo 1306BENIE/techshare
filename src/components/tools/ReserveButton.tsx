@@ -11,7 +11,7 @@ export function ReserveButton({ toolId }: { toolId: string }) {
 
   return (
     <Button
-      className="px-8 py-3 text-base rounded-lg"
+      className="px-8 py-3 text-base rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
       size="lg"
       onClick={() => {
         if (!session) {

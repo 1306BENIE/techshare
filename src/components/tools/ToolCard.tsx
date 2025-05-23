@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
-import { Trash2, MapPin, Clock, Star } from "lucide-react";
+import { MapPin, Clock, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
@@ -23,88 +23,56 @@ interface ToolCardProps {
 export function ToolCard({ tool }: ToolCardProps) {
   const router = useRouter();
 
-  // Fonction pour obtenir l'URL de l'image
-  const getImageUrl = (imagePath: string | undefined) => {
-    if (!imagePath) return "/placeholder-tool.jpg";
-    if (imagePath.startsWith("http")) return imagePath;
-    // Si le chemin commence par /api/, on le remplace par /
-    if (imagePath.startsWith("/api/")) {
-      return imagePath.replace("/api/", "/");
-    }
-    return imagePath;
-  };
+  // Détermine la couleur et le style du badge de statut
+  const statusBadge =
+    tool.status === "AVAILABLE" ? (
+      <span className="inline-block px-2 py-0.5 rounded-md bg-blue-100 text-blue-700 text-xs font-semibold">
+        Disponible
+      </span>
+    ) : (
+      <span className="inline-block px-2 py-0.5 rounded-md bg-gray-200 text-gray-500 text-xs font-semibold">
+        Indisponible
+      </span>
+    );
 
-  const handleDeleteImage = async (imageUrl: string) => {
-    try {
-      const response = await fetch(`/api/tools/${tool._id}/images`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ imageUrl }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erreur lors de la suppression de l'image");
-      }
-
-      // Rafraîchir la page pour voir les changements
-      router.refresh();
-    } catch (error) {
-      console.error("Erreur:", error);
-    }
-  };
+  // Badge "New" si besoin (exemple)
+  // const isNew = ...
+  // const newBadge = isNew ? (
+  //   <span className="inline-block px-2 py-0.5 rounded-md bg-violet-100 text-violet-700 text-xs font-semibold ml-2">New</span>
+  // ) : null;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      whileHover={{ y: -5 }}
+      whileHover={{ y: -4, boxShadow: "0 8px 32px rgba(0,0,0,0.10)" }}
+      className="bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-300 border hover:border-blue-200"
     >
-      <Link href={`/tools/${tool._id}`}>
-        <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 border-0 bg-white">
+      <Link
+        href={`/tools/${tool._id}`}
+        className="block group focus:outline-none"
+      >
+        <Card className="overflow-hidden border-0 bg-white">
           <CardHeader className="p-0">
             <div className="relative aspect-[4/3] group">
               <Image
-                src={getImageUrl(tool.images?.[0])}
+                src={tool.images?.[0] || "/placeholder-tool.jpg"}
                 alt={tool.name}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 priority={false}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <Badge
-                className="absolute top-3 right-3 z-10"
-                variant={
-                  tool.status === "AVAILABLE" ? "default" : "destructive"
-                }
-              >
-                {tool.status === "AVAILABLE" ? "Disponible" : "Indisponible"}
-              </Badge>
-              {tool.images?.[0] && (
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  className="absolute bottom-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleDeleteImage(tool.images[0]);
-                  }}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              )}
+              <div className="absolute top-3 left-3 z-10">{statusBadge}</div>
             </div>
           </CardHeader>
-          <CardContent className="p-4 space-y-3">
+          <CardContent className="p-5 flex flex-col gap-2">
             <div className="flex justify-between items-start">
               <h3 className="text-lg font-semibold line-clamp-1 group-hover:text-blue-600 transition-colors">
                 {tool.name}
               </h3>
-              <Badge variant="secondary" className="ml-2">
+              <Badge
+                variant="secondary"
+                className="ml-2 px-2 py-0.5 rounded-md text-xs font-semibold bg-gray-100 text-gray-700 border-none"
+              >
                 {tool.specifications?.condition || "Non spécifié"}
               </Badge>
             </div>
@@ -127,14 +95,17 @@ export function ToolCard({ tool }: ToolCardProps) {
                 <span className="font-medium">4.8</span>
                 <span className="text-gray-500">(24 avis)</span>
               </div>
-              <span className="text-xl font-bold text-blue-600">
+              <span className="text-lg font-bold text-blue-600">
                 {tool.price.toLocaleString("fr-FR")} FCFA
                 <span className="text-sm text-gray-500">/jour</span>
               </span>
             </div>
           </CardContent>
           <CardFooter className="p-4 pt-0">
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 transition-colors">
+            <Button
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow transition-colors text-base py-2"
+              tabIndex={-1}
+            >
               Voir les détails
             </Button>
           </CardFooter>
