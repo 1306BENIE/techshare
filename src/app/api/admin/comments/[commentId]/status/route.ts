@@ -1,17 +1,19 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Comment from "@/models/Comment";
 
 export async function PATCH(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { commentId: string } }
 ) {
   try {
     await connectDB();
     const { isApproved } = await request.json();
+    const { commentId } = params;
 
     const comment = await Comment.findByIdAndUpdate(
-      params.commentId,
+      commentId,
       { isApproved },
       { new: true }
     )
